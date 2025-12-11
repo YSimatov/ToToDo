@@ -1,0 +1,30 @@
+<div class="layout-container">
+  <header class="top-bar">
+    <div class="date-info">
+      <div class="current-date">{{ now() | date:'dd.MM.yy' }}</div>
+      <div class="current-time">{{ now() | date:'HH:mm' }}</div>
+    </div>
+
+    <div class="header-controls">
+      <button class="theme-toggle" (click)="toggleTheme()"
+        [attr.aria-label]="themeService.isDarkTheme() ? 'Switch to light theme' : 'Switch to dark theme'">
+        <span class="icon" *ngIf="themeService.isDarkTheme()">🌙</span>
+        <span class="icon" *ngIf="!themeService.isDarkTheme()">☀️</span>
+      </button>
+      <div class="user-profile" (click)="toggleUserMenu()">
+        <div class="avatar">👤</div>
+        <span class="username" *ngIf="taskService.currentUser()">{{ taskService.currentUser() }}</span>
+
+        <!-- Dropdown Menu -->
+        <div class="user-dropdown" *ngIf="isUserMenuOpen()">
+          <button (click)="logout()" class="logout-btn">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <app-calendar class="calendar-wrapper"></app-calendar>
+    <app-task-list class="tasks-wrapper"></app-task-list>
+  </main>
+</div>

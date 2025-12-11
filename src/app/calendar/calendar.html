@@ -1,0 +1,39 @@
+<div class="calendar-container">
+    <!-- Left Column: Navigation -->
+    <div class="calendar-nav">
+        <div class="year-selector">
+            <button (click)="changeYear(-1)">&lt;</button>
+            <span class="current-year">{{ currentYear() }}</span>
+            <button (click)="changeYear(1)">&gt;</button>
+        </div>
+
+        <div class="months-list">
+            <div *ngFor="let month of months; let i = index" class="month-item"
+                [class.active]="i === currentMonthIndex()" (click)="selectMonth(i)">
+                {{ month }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Column: Grid -->
+    <div class="calendar-grid-area">
+        <div class="month-header">
+            {{ months[currentMonthIndex()] }} {{ currentYear() }}
+        </div>
+
+        <div class="weekdays-row">
+            <div *ngFor="let day of weekDays" class="weekday">{{ day }}</div>
+        </div>
+
+        <div class="days-grid">
+            <div *ngFor="let day of calendarDays()" class="day-cell" [class.empty]="!day.day"
+                [class.selected]="isSelected(day)" (click)="selectDate(day)">
+                <span *ngIf="day.day" class="day-number">{{ day.day }}</span>
+
+                <div class="task-indicators" *ngIf="day.tasks && day.tasks.length > 0">
+                    <div *ngFor="let task of day.tasks" class="task-dot" [class.completed]="task.completed"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

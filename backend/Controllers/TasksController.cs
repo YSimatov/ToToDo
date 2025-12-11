@@ -1,0 +1,72 @@
+using backend.Models;
+using backend.Repositories;
+using Microsoft.AspNetCore.Mvc;
+
+namespace backend.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class TasksController : ControllerBase
+{
+  private readonly ITaskRepository _repository;
+
+  public TasksController(ITaskRepository repository)
+  {
+    _repository = repository;
+  }
+
+  [HttpGet]
+  public ActionResult<IEnumerable<TodoTask>> GetAll()
+  {
+    return Ok(_repository.GetAll());
+  }
+
+  [HttpGet("{id}")]
+  public ActionResult<TodoTask> GetById(string id)
+  {
+    var task = _repository.GetById(id);
+    if (task == null)
+    {
+      return NotFound();
+    }
+    return Ok(task);
+  }
+
+  [HttpPost]
+  public ActionResult<TodoTask> Create(TodoTask task)
+  {
+    _repository.Add(task);
+    return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
+  }
+
+  [HttpPut("{id}")]
+  public IActionResult Update(string id, TodoTask task)
+  {
+    if (id != task.Id)
+    {
+      return BadRequest();
+    }
+
+    var existingTask = _repository.GetById(id);
+    if (existingTask == null)
+    {
+      return NotFound();
+    }
+
+    _repository.Update(task);
+    return NoContent();
+  }
+
+  [HttpDelete("{id}")]
+  public IActionResult Delete(string id)
+  {
+    var task = _repository.GetById(id);
+    if (task == null)
+    {
+      return NotFound();
+    }
+
+    _repository.Delete(id);
+    return NoContent();
+  }
+}
