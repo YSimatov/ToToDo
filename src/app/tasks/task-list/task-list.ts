@@ -2,11 +2,12 @@ import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TaskService, Task } from '../../services/task';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationDialogComponent],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css',
 })
@@ -15,6 +16,11 @@ export class TaskListComponent {
 
   isFormVisible = signal(false);
   editingTask = signal<Task | null>(null);
+
+  // Confirmation Modal State
+  isConfirmationOpen = false;
+  confirmationMessage = '';
+  taskToDeleteId: string | null = null;
 
   // Form model
   newTaskTitle = '';
@@ -76,9 +82,22 @@ export class TaskListComponent {
   }
 
   deleteTask(taskId: string) {
-    if (confirm('Удалить задачу?')) {
-      this.taskService.deleteTask(taskId);
+    this.taskToDeleteId = taskId;
+    this.confirmationMessage = 'Вы действительно хотите удалить эту задачу?';
+    this.isConfirmationOpen = true;
+  }
+
+  onConfirmDelete() {
+    if (this.taskToDeleteId) {
+      this.taskService.deleteTask(this.taskToDeleteId);
+      this.taskToDeleteId = null;
     }
+    this.isConfirmationOpen = false;
+  }
+
+  onCancelDelete() {
+    this.isConfirmationOpen = false;
+    this.taskToDeleteId = null;
   }
 
   toggleComplete(task: Task) {

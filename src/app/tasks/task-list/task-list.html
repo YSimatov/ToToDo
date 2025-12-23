@@ -59,4 +59,11 @@
             </div>
         </div>
     </div>
+
+    <app-confirmation-dialog
+        [isOpen]="isConfirmationOpen"
+        [message]="confirmationMessage"
+        (confirm)="onConfirmDelete()"
+        (cancel)="onCancelDelete()">
+    </app-confirmation-dialog>
 </div>

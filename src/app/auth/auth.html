@@ -4,6 +4,10 @@
             <h2>{{ isLoginMode() ? 'ВХОД' : 'РЕГИСТРАЦИЯ' }}</h2>
         </div>
 
+        <div class="error-message" *ngIf="errorMessage()">
+            {{ errorMessage() }}
+        </div>
+
         <form (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <label>Логин</label>

@@ -39,14 +39,11 @@ public class MockTaskRepository : ITaskRepository
 
     public TodoTask? GetById(string id)
     {
-        if (string.IsNullOrWhiteSpace(id)) return null;
         return _tasks.FirstOrDefault(t => t.Id == id);
     }
 
     public void Add(TodoTask task)
     {
-        if (task == null) throw new ArgumentNullException(nameof(task));
-        
         if (string.IsNullOrEmpty(task.Id))
         {
             task.Id = Guid.NewGuid().ToString();
@@ -56,9 +53,6 @@ public class MockTaskRepository : ITaskRepository
 
     public void Update(TodoTask task)
     {
-        if (task == null) throw new ArgumentNullException(nameof(task));
-        if (string.IsNullOrWhiteSpace(task.Id)) throw new ArgumentException("Task ID cannot be empty", nameof(task));
-
         var existingTask = GetById(task.Id);
         if (existingTask != null)
         {
@@ -73,7 +67,6 @@ public class MockTaskRepository : ITaskRepository
 
     public void Delete(string id)
     {
-        if (string.IsNullOrWhiteSpace(id)) return;
         var task = GetById(id);
         if (task != null)
         {

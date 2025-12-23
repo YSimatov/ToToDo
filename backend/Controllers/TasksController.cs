@@ -1,5 +1,6 @@
 using backend.Models;
 using backend.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -24,10 +25,6 @@ public class TasksController : ControllerBase
   [HttpGet("{id}")]
   public ActionResult<TodoTask> GetById(string id)
   {
-    if (string.IsNullOrWhiteSpace(id))
-    {
-      return BadRequest("Id cannot be null or empty.");
-    }
     var task = _repository.GetById(id);
     if (task == null)
     {
@@ -39,10 +36,17 @@ public class TasksController : ControllerBase
   [HttpPost]
   public ActionResult<TodoTask> Create(TodoTask task)
   {
-    if (task == null)
+    if (!ModelState.IsValid)
     {
-      return BadRequest("Task cannot be null.");
+        return BadRequest(ModelState);
     }
+
+    if (!string.IsNullOrEmpty(task.EndTime) && string.Compare(task.EndTime, task.StartTime) <= 0)
+    {
+        ModelState.AddModelError("EndTime", "End time must be after start time.");
+        return BadRequest(ModelState);
+    }
+
     _repository.Add(task);
     return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
   }
@@ -50,13 +54,20 @@ public class TasksController : ControllerBase
   [HttpPut("{id}")]
   public IActionResult Update(string id, TodoTask task)
   {
-    if (string.IsNullOrWhiteSpace(id) || task == null)
-    {
-       return BadRequest("Invalid input data.");
-    }
     if (id != task.Id)
     {
-      return BadRequest("Id mismatch.");
+      return BadRequest("ID mismatch");
+    }
+
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+
+    if (!string.IsNullOrEmpty(task.EndTime) && string.Compare(task.EndTime, task.StartTime) <= 0)
+    {
+        ModelState.AddModelError("EndTime", "End time must be after start time.");
+        return BadRequest(ModelState);
     }
 
     var existingTask = _repository.GetById(id);
@@ -70,12 +81,9 @@ public class TasksController : ControllerBase
   }
 
   [HttpDelete("{id}")]
+  [Authorize(Roles = "Admin")]
   public IActionResult Delete(string id)
   {
-    if (string.IsNullOrWhiteSpace(id))
-    {
-       return BadRequest("Id cannot be null or empty.");
-    }
     var task = _repository.GetById(id);
     if (task == null)
     {

@@ -49,8 +49,15 @@ export class LayoutComponent implements OnInit, OnDestroy {
       }
 
       const diff = taskDate.getTime() - now.getTime();
-      // 1 hour = 3600000 ms
+      // 1 hour = 60 * 60 * 1000 = 3600000 ms
+      // Notify if within 60 mins (e.g. 59:59 to 60:00)
+      // To avoid multiple alerts, we might need a flag "notified" in local state, 
+      // but for this simple lab, we can just log or show a toast if we had one.
+      // Or checking if diff is exactly roughly 1 hour (e.g. between 59m 50s and 60m).
+
       if (diff > 3590000 && diff < 3600000) {
+        // Simple browser notification or alert
+        // Using Notification API if available, else alert
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
           new Notification('Напоминание', { body: `Скоро задача: ${task.title}` });
         } else if (typeof Notification !== 'undefined' && Notification.permission !== 'denied') {
