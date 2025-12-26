@@ -1,0 +1,69 @@
+<div class="tasks-container">
+    <div class="tasks-header">
+        <h2>Задачи</h2>
+        <button class="add-btn" (click)="openAddForm()">+</button>
+    </div>
+
+    <div class="tasks-content">
+        <div *ngIf="selectedDateTasks().length === 0" class="empty-state">
+            ПУСТО
+        </div>
+
+        <div class="task-list" *ngIf="selectedDateTasks().length > 0">
+            <div *ngFor="let task of selectedDateTasks()" class="task-item" [class.completed]="task.completed">
+                <div class="task-time">
+                    {{ task.startTime }} <span *ngIf="task.endTime">- {{ task.endTime }}</span>
+                </div>
+                <div class="task-info">
+                    <div class="task-title">{{ task.title }}</div>
+                    <div class="task-desc" *ngIf="task.description">{{ task.description }}</div>
+                </div>
+                <div class="task-actions">
+                    <button (click)="toggleComplete(task)" class="action-btn check-btn" title="Выполнить">✓</button>
+                    <button (click)="editTask(task)" class="action-btn edit-btn" title="Изменить">✎</button>
+                    <button (click)="deleteTask(task.id)" class="action-btn delete-btn" title="Удалить" *ngIf="taskService.isAdmin()">✕</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Form Overlay -->
+    <div class="task-form-overlay" *ngIf="isFormVisible()">
+        <div class="task-form-card">
+            <h3>{{ editingTask() ? 'Редактировать задачу' : 'Новая задача' }}</h3>
+
+            <div class="form-group">
+                <label>Название</label>
+                <input type="text" [(ngModel)]="newTaskTitle" placeholder="Что нужно сделать?">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Начало</label>
+                    <input type="time" [(ngModel)]="newTaskTimeStart">
+                </div>
+                <div class="form-group">
+                    <label>Конец</label>
+                    <input type="time" [(ngModel)]="newTaskTimeEnd">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea [(ngModel)]="newTaskDescription" rows="3" placeholder="Дополнительно..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button class="cancel-btn" (click)="closeForm()">Отмена</button>
+                <button class="save-btn" (click)="saveTask()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <app-confirmation-dialog
+        [isOpen]="isConfirmationOpen"
+        [message]="confirmationMessage"
+        (confirm)="onConfirmDelete()"
+        (cancel)="onCancelDelete()">
+    </app-confirmation-dialog>
+</div>

@@ -1,0 +1,80 @@
+/* Global Styles & Theming */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Light Theme Variables */
+  --bg-color: #F5F7FA;
+  --text-color: #333333;
+  --card-bg: #FFFFFF;
+  --primary-color: #4A90E2; /* Blue */
+  --secondary-color: #F5A623; /* Orange/Yellow accent */
+  --danger-color: #E02020;
+  --success-color: #7ED321;
+  --border-color: #E1E4E8;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --input-bg: #F0F2F5;
+  --font-family: 'Inter', sans-serif;
+}
+
+body.dark-theme {
+  /* Dark Theme Variables */
+  --bg-color: #121212;
+  --text-color: #E0E0E0;
+  --card-bg: #1E1E1E;
+  --primary-color: #BB86FC; /* Purple/Blue variant for dark mode */
+  --secondary-color: #03DAC6; /* Teal accent */
+  --danger-color: #CF6679;
+  --success-color: #03DAC6;
+  --border-color: #333333;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --input-bg: #2C2C2C;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  height: 100%;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+/* Utility Classes */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+input, textarea {
+  font-family: inherit;
+  outline: none;
+}
