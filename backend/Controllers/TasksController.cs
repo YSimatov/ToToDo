@@ -38,13 +38,13 @@ public class TasksController : ControllerBase
   {
     if (!ModelState.IsValid)
     {
-        return BadRequest(ModelState);
+      return BadRequest(ModelState);
     }
 
     if (!string.IsNullOrEmpty(task.EndTime) && string.Compare(task.EndTime, task.StartTime) <= 0)
     {
-        ModelState.AddModelError("EndTime", "End time must be after start time.");
-        return BadRequest(ModelState);
+      ModelState.AddModelError("EndTime", "End time must be after start time.");
+      return BadRequest(ModelState);
     }
 
     _repository.Add(task);
@@ -54,6 +54,16 @@ public class TasksController : ControllerBase
   [HttpPut("{id}")]
   public IActionResult Update(string id, TodoTask task)
   {
+    if (task == null)
+    {
+      return BadRequest("Task cannot be null");
+    }
+
+    if (string.IsNullOrWhiteSpace(id))
+    {
+      return BadRequest("Invalid ID");
+    }
+
     if (id != task.Id)
     {
       return BadRequest("ID mismatch");
@@ -61,13 +71,13 @@ public class TasksController : ControllerBase
 
     if (!ModelState.IsValid)
     {
-        return BadRequest(ModelState);
+      return BadRequest(ModelState);
     }
 
     if (!string.IsNullOrEmpty(task.EndTime) && string.Compare(task.EndTime, task.StartTime) <= 0)
     {
-        ModelState.AddModelError("EndTime", "End time must be after start time.");
-        return BadRequest(ModelState);
+      ModelState.AddModelError("EndTime", "End time must be after start time.");
+      return BadRequest(ModelState);
     }
 
     var existingTask = _repository.GetById(id);
